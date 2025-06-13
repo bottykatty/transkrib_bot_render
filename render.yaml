@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: transkrib-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: TOKEN
+        value: 8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0
