@@ -1,13 +1,18 @@
+import os
 import telebot
 from telebot import types
-import os
+import ffmpeg
+import openai
 import whisper
-from deep_translator import GoogleTranslator
 
+# Инициализация
 TOKEN = os.getenv("TOKEN")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 bot = telebot.TeleBot(TOKEN)
-model = whisper.load_model("base")  # загружаем модель один раз
-translator = GoogleTranslator(source='auto', target='ru')  # создаём один раз
+openai.api_key = OPENAI_API_KEY
+
+# Загружаем tiny-модель
+model = whisper.load_model("tiny")
 
 start_text = """🇷🇺 Перешли сюда аудио-сообщение или запиши своё.
 🇬🇧 Forward a voice message here or record your own."""
@@ -21,6 +26,7 @@ def handle_voice(message):
     bot.send_message(message.chat.id, "🕐 Обрабатываю...")
 
     try:
+        # Скачиваем и сохраняем файл
         file_info = bot.get_file(message.voice.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
 
@@ -30,28 +36,35 @@ def handle_voice(message):
         with open(ogg_file, 'wb') as f:
             f.write(downloaded_file)
 
-        import ffmpeg
         ffmpeg.input(ogg_file).output(mp3_file).run(overwrite_output=True)
 
+        # Распознаём речь
         result = model.transcribe(mp3_file)
         original_text = result["text"]
         lang = result["language"]
 
-        try:
-            translated = GoogleTranslator(
-                source='auto',
-                target='en' if lang == "ru" else 'ru'
-            ).translate(original_text)
-        except Exception:
-            translated = "❌ Перевести не удалось. Попробуй позже."
+        # GPT-перевод
+        prompt = f"""Переведи следующий текст с сохранением стиля и интонации.
+Если он на русском — переведи на английский. Если на английском — переведи на русский.
 
-        response = f"""🇷🇺 Вот оригинальный текст аудио / 🇬🇧 Here's the original audio text:
+Текст:
+{original_text}
+"""
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=1000
+        )
+        translated = response["choices"][0]["message"]["content"]
+
+        reply = f"""🇷🇺 Оригинал / 🇬🇧 Original:
 {original_text}
 
-🇷🇺 А вот перевод / 🇬🇧 And here’s the translation:
+🌐 Перевод / Translation:
 {translated}"""
 
-        bot.send_message(message.chat.id, response)
+        bot.send_message(message.chat.id, reply)
 
         os.remove(ogg_file)
         os.remove(mp3_file)

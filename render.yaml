@@ -10,5 +10,7 @@ services:
     envVars:
       - key: TOKEN
         value: 8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0
+      - key: OPENAI_API_KEY
+        value: <8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0>  # ⚠️ обязательно вставь
       - key: PYTHON_VERSION
         value: 3.10
