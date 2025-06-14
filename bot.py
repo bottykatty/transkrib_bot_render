@@ -2,13 +2,12 @@ import telebot
 from telebot import types
 import os
 import whisper
-model = whisper.load_model("base")
-from translatepy import Translator
+from deep_translator import GoogleTranslator
 
 TOKEN = "8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0"
 bot = telebot.TeleBot(TOKEN)
-model = whisper.load_model("base")
-translator = Translator()
+
+model = whisper.load_model("base")  # загружаем модель один раз
 
 start_text = """🇷🇺 Перешли сюда аудио-сообщение или запиши своё.
 🇬🇧 Forward a voice message here or record your own."""
