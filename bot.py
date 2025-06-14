@@ -69,4 +69,3 @@ def fallback(message):
 
 print("🤖 Бот запущен")
 bot.infinity_polling()
->>>>>>> 6d0ae88 (Первый рабочий коммит)
