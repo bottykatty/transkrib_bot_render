@@ -4,10 +4,10 @@ import os
 import whisper
 from deep_translator import GoogleTranslator
 
-TOKEN = "8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0"
+TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
-
 model = whisper.load_model("base")  # загружаем модель один раз
+translator = GoogleTranslator(source='auto', target='ru')  # создаём один раз
 
 start_text = """🇷🇺 Перешли сюда аудио-сообщение или запиши своё.
 🇬🇧 Forward a voice message here or record your own."""
@@ -38,9 +38,10 @@ def handle_voice(message):
         lang = result["language"]
 
         try:
-            translated = translator.translate(
-                original_text, "English" if lang == "ru" else "Russian"
-            ).result
+            translated = GoogleTranslator(
+                source='auto',
+                target='en' if lang == "ru" else 'ru'
+            ).translate(original_text)
         except Exception:
             translated = "❌ Перевести не удалось. Попробуй позже."
 
