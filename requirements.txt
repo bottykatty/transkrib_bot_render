@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-pyTelegramBotAPI==4.12.0
-whisper
-ffmpeg-python
-googletrans==4.0.0rc1
-=======
 pyTelegramBotAPI==4.15.4
 whisper
 ffmpeg-python
 translatepy
->>>>>>> 6d0ae88 (Первый рабочий коммит)
