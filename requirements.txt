@@ -1,4 +1,4 @@
 pyTelegramBotAPI==4.15.4
-whisper
+openai-whisper
 ffmpeg-python
 translatepy
