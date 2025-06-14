@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   - type: web
     name: transkrib-bot
@@ -7,3 +8,14 @@ services:
     envVars:
       - key: TOKEN
         value: 8140428860:AAEBJX7uIG4UcjsheW9VMiP_wJkIGnOdHY0
+=======
+services:
+  - type: web
+    name: transkrib-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash start.sh
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
+>>>>>>> 6d0ae88 (Первый рабочий коммит)
